@@ -1,0 +1,36 @@
+<h2>Chat: {{ session.session_name }}</h2>
+<div id="chat-box">
+    {% for msg in messages %}
+        <p><strong>{{ msg.sender }}:</strong> {{ msg.message }}</p>
+    {% endfor %}
+</div>
+
+<form id="chat-form">
+    {% csrf_token %}
+    <input type="text" id="message" name="message" placeholder="Type a message..." required>
+    <button type="submit">Send</button>
+</form>
+
+<script>
+document.getElementById("chat-form").onsubmit = async function(event) {
+    event.preventDefault();
+    
+    let messageInput = document.getElementById("message");
+    let message = messageInput.value;
+    
+    let response = await fetch("{% url 'send_message' session.id %}", {
+        method: "POST",
+        headers: { "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value },
+        body: new URLSearchParams({ "message": message })
+    });
+    
+    let data = await response.json();
+    
+    let chatBox = document.getElementById("chat-box");
+    chatBox.innerHTML += `<p><strong>User:</strong> ${data.user_message}</p>`;
+    chatBox.innerHTML += `<p><strong>Bot:</strong> ${data.bot_message}</p>`;
+    
+    messageInput.value = "";
+};
+</script>
+<a href="{% url 'chat' %}">Back to Sessions</a>

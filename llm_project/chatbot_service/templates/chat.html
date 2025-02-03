@@ -1,0 +1,13 @@
+<h2>Chat Sessions</h2>
+<ul>
+    {% for session in sessions %}
+        <li><a href="{% url 'chat_session' session.id %}">{{ session.session_name }}</a></li>
+    {% endfor %}
+</ul>
+
+<form method="post" action="{% url 'create_session' %}">
+    {% csrf_token %}
+    <input type="text" name="session_name" placeholder="New Chat Name" required>
+    <button type="submit">Create Chat</button>
+</form>
+<a href="{% url 'logout' %}">Logout</a>

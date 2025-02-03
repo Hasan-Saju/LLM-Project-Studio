@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Session - {{ session.session_name }}</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>{{ session.session_name }}</h1>
+    <a href="{% url 'chat' %}">Back to Chat</a>
+    <div id="chat-messages">
+        {% for message in messages %}
+            <p><strong>{{ message.sender }}:</strong> {{ message.message }}</p>
+        {% endfor %}
+    </div>
+    <form id="chat-form">
+        <input type="text" id="message" name="message" placeholder="Type your message..." required>
+        <button type="submit">Send</button>
+    </form>
+
+    <script>
+        $(document).ready(function() {
+            $("#chat-form").on("submit", function(e) {
+                e.preventDefault();
+                const message = $("#message").val();
+                $.ajax({
+                    url: "{% url 'send_message' session.id %}",
+                    method: "POST",
+                    data: { message: message, csrfmiddlewaretoken: "{{ csrf_token }}" },
+                    success: function(response) {
+                        $("#chat-messages").append(`<p><strong>user:</strong> ${response.user_message}</p>`);
+                        $("#chat-messages").append(`<p><strong>bot:</strong> ${response.bot_message}</p>`);
+                        $("#message").val("");
+                    },
+                    error: function(xhr) {
+                        alert("An error occurred while sending the message.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
