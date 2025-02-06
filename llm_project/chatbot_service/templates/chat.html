@@ -1,13 +1,54 @@
-<h2>Chat Sessions</h2>
-<ul>
-    {% for session in sessions %}
-        <li><a href="{% url 'chat_session' session.id %}">{{ session.session_name }}</a></li>
-    {% endfor %}
-</ul>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Session</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center p-6">
+    <div class="w-full max-w-2xl bg-white shadow-lg rounded-lg p-6">
+        <div class="flex justify-between items-center">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">
+                Chat Sessions
+            </h2>
+            <a href="{% url 'logout' %}" class="text-red-500 hover:underline">
+                Log Out
+            </a>
+        </div>
 
-<form method="post" action="{% url 'create_session' %}">
-    {% csrf_token %}
-    <input type="text" name="session_name" placeholder="New Chat Name" required>
-    <button type="submit">Create Chat</button>
-</form>
-<a href="{% url 'logout' %}">Logout</a>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            {% for session in sessions %}
+            <div
+                class="bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105"
+            >
+                <a
+                    href="{% url 'chat_session' session.id %}"
+                    class="block text-blue-500 hover:text-blue-700 font-semibold text-lg"
+                >
+                    {{ session.session_name }}
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <form
+            method="post"
+            action="{% url 'create_session' %}"
+            class="mt-6 space-y-4"
+        >
+            {% csrf_token %}
+            <input
+                type="text"
+                name="session_name"
+                placeholder="New Chat Name"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+                type="submit"
+                class="w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+                Create Chat
+            </button>
+        </form>
+    </div>
+</body>
