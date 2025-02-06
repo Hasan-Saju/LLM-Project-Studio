@@ -10,7 +10,26 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Detect environment
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+
+# Set Ollama API URL based on environment
+if ENVIRONMENT == "production":
+    OLLAMA_API_URL = os.getenv("OLLAMA_API_PROD")
+else:
+    OLLAMA_API_URL = os.getenv("OLLAMA_API_DEV")
+
+print(f"Running in {ENVIRONMENT} mode. Using OLLAMA_API_URL: {OLLAMA_API_URL}")
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
