@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -14,6 +15,7 @@ def user_login(request):
         if user:
             login(request, user)
             return redirect("chat")
+    # TODO: Throw an error msg that this user is not rregistered
     return render(request, "login.html")
 
 def user_logout(request):
@@ -69,7 +71,7 @@ def send_message(request, session_id):
         ChatMessage.objects.create(session=session, sender="user", message=user_message)
 
         try:
-            response = requests.post("http://localhost:11434/api/generate", json={
+            response = requests.post(f"{settings.OLLAMA_API_URL}/api/generate", json={
                 "model": "deepseek-r1",
                 "prompt": chat_history,  # Sending full conversation context
                 "stream": False  # Ensures we get a full response
