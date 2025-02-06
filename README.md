@@ -14,23 +14,6 @@ ensure:
 
 <br>
 
-## Running the Project with Docker
-
-#### 1️⃣ Build the Docker Image
-```sh
-docker build -t my-django-app .
-```
-
-#### 2️⃣ Run the Container
-```sh
-docker run -p 8000:8000 my-django-app
-```
-- The application will be accessible at **http://localhost:8000/**
-
-
-<br>
-
-
 ## Running the Project Locally
 
 #### 1️⃣ Clone the Repository
@@ -66,6 +49,23 @@ python manage.py runserver
 
 
 <br>
+
+## Running the Project with Docker
+
+#### 1️⃣ Build the Docker Image
+```sh
+docker build -t my-django-app .
+```
+
+#### 2️⃣ Run the Container
+```sh
+docker run -p 8000:8000 my-django-app
+```
+- The application will be accessible at **http://localhost:8000/**
+
+
+<br>
+
 
 ## Environment Variables
 To configure **Ollama API URL**, create a `.env` file in the `llm_project` directory with:
