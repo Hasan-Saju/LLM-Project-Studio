@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import ChatSession, ChatMessage
 import requests, json
@@ -15,7 +16,10 @@ def user_login(request):
         if user:
             login(request, user)
             return redirect("chat")
-    # TODO: Throw an error msg that this user is not rregistered
+        else:
+            print("NO user found")
+            # messages.error(request, "No user found. Please register first.")
+            return render(request, "login.html", {"error": "User not registered. Please register first."})
     return render(request, "login.html")
 
 def user_logout(request):
