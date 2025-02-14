@@ -13,10 +13,18 @@ REGISTRAR_URL = "http://localhost:5001/register"
 def send_heartbeat():
     while True:
         time.sleep(120)
-        requests.post("http://localhost:5001/heartbeat", json={"service_name": SERVICE_NAME})
+        try:
+            requests.post("http://localhost:5001/heartbeat", json={"service_name": SERVICE_NAME})
+            print(f"Sent heartbeat for {SERVICE_NAME}")
+        except requests.exceptions.RequestException as e:
+            print(f"Failed to send heartbeat: {e}")
 
 # Register this service with the service registrar
-requests.post(REGISTRAR_URL, json={"service_name": SERVICE_NAME, "service_address": SERVICE_ADDRESS})
+try:
+    response = requests.post(REGISTRAR_URL, json={"service_name": SERVICE_NAME, "service_address": SERVICE_ADDRESS})
+    print("Service registered:", response.status_code, response.text)
+except requests.exceptions.RequestException as e:
+    print(f"Service registration failed: {e}")
 
 # Start heartbeat thread
 threading.Thread(target=send_heartbeat, daemon=True).start()
@@ -24,20 +32,27 @@ threading.Thread(target=send_heartbeat, daemon=True).start()
 @app.route("/process", methods=["POST"])
 def process_prompt():
     """Fixes grammar and fact-checks the user prompt."""
-    data = request.json
-    user_message = data.get("message")
+    try:
+        data = request.json
+        if not data or "message" not in data:
+            return jsonify({"error": "Invalid or missing message"}), 400
 
-    if not user_message:
-        return jsonify({"error": "No message provided"}), 400
+        user_message = data["message"]
+        print("Received message:", user_message)
 
-    # Simple grammar fix (Replace this with an AI model if needed)
-    fixed_message = user_message.replace("u", "you").replace("r", "are")
+        # Simple grammar fix (Replace with AI model if needed)
+        fixed_message = user_message.replace("u", "you").replace("r", "are")
 
-    # Fact-checking logic (simplified)
-    if "earth is flat" in fixed_message.lower():
-        fixed_message = fixed_message.replace("earth is flat", "Earth is round")
+        # Fact-checking logic (simplified)
+        if "earth is flat" in fixed_message.lower():
+            fixed_message = fixed_message.replace("earth is flat", "Earth is round")
 
-    return jsonify({"fixed_message": fixed_message})
+        print("Fixed message:", fixed_message)
+        return jsonify({"fixed_message": fixed_message})  # ✅ Always return clean JSON
+
+    except Exception as e:
+        print(f"Error processing message: {e}")
+        return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == "__main__":
     app.run(port=5002)
