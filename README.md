@@ -82,3 +82,8 @@ OLLAMA_API_PROD=http://host.docker.internal:11434
 ![alt text](image.png)
 
 
+
+## Preview
+![alt text](ServiceRegistry.png)
+
+
