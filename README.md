@@ -1,10 +1,10 @@
-# LLM Project Studio
+# LLM-Project: Software Studio
 
 Welcome to the LLM Project Studio! This is a Django-based project that integrates with Ollama. The project is containerized using Docker for easy deployment.
 
 ## 📌 Table of Contents
 
-- [LLM Project Studio](#llm-project-studio)
+- [LLM-Project: Software Studio](#llm-project-software-studio)
   - [📌 Table of Contents](#-table-of-contents)
   - [Prerequisites](#prerequisites)
   - [Assignment 1: Running the Project Locally](#assignment-1-running-the-project-locally)
