@@ -7,7 +7,7 @@ Welcome to the LLM Project Studio! This is a Django-based project that integrate
 - [LLM Project Studio](#llm-project-studio)
   - [📌 Table of Contents](#-table-of-contents)
   - [Prerequisites](#prerequisites)
-  - [Running the Project Locally](#running-the-project-locally)
+  - [Assignment 1: Running the Project Locally](#assignment-1-running-the-project-locally)
       - [1️⃣ Clone the Repository](#1️⃣-clone-the-repository)
       - [2️⃣ Create a Virtual Environment](#2️⃣-create-a-virtual-environment)
       - [3️⃣ Install Dependencies](#3️⃣-install-dependencies)
@@ -50,7 +50,7 @@ Before running the project, ensure you have the following installed:
 Ensure:
 - **Ollama is running on your machine** (`http://localhost:11434`)
 
-## Running the Project Locally
+## Assignment 1: Running the Project Locally
 
 #### 1️⃣ Clone the Repository
 ```sh
