@@ -6,7 +6,9 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import ChatSession, ChatMessage
-import requests, json
+import requests
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 def user_login(request):
     if request.method == "POST":
@@ -54,48 +56,115 @@ def chat_session(request, session_id):
     messages = ChatMessage.objects.filter(session=session)
     return render(request, "chat_session.html", {"session": session, "messages": messages})
 
+# @login_required
+# def send_message(request, session_id):
+#     if request.method == "POST":
+#         session = get_object_or_404(ChatSession, id=session_id, user=request.user)
+#         user_message = request.POST["message"]
+
+#         # Fetch previous chat history for context (last 10 messages for brevity)
+#         previous_messages = ChatMessage.objects.filter(session=session).order_by("timestamp")[:10]
+
+#         # Build the conversation history
+#         chat_history = ""
+#         for msg in previous_messages:
+#             chat_history += f"{msg.sender}: {msg.message}\n"
+
+#         # Append the new user message
+#         chat_history += f"User: {user_message}\n"
+
+#         # Save user message to database
+#         ChatMessage.objects.create(session=session, sender="user", message=user_message)
+
+#         try:
+#             # response = requests.post(f"{settings.OLLAMA_API_URL}/api/generate", json={
+#             #     "model": "deepseek-r1",
+#             #     "prompt": chat_history,  # Sending full conversation context
+#             #     "stream": False  # Ensures we get a full response
+#             # })
+#             response = requests.post(f"http://localhost:11434/api/generate", json={
+#                 "model": "deepseek-r1",
+#                 "prompt": chat_history,  # Sending full conversation context
+#                 "stream": False  # Ensures we get a full response
+#             })
+
+#             # Ensure request was successful
+#             if response.status_code != 200:
+#                 return JsonResponse({"error": f"Ollama API error {response.status_code}: {response.text}"}, status=500)
+
+#             # Extract and store the bot's response
+#             response_data = response.json()
+#             bot_message = response_data.get("response", "I'm not sure how to respond.")
+
+#         except requests.exceptions.RequestException as e:
+#             return JsonResponse({"error": f"Request failed: {str(e)}"}, status=500)
+
+#         # Save bot response to database
+#         ChatMessage.objects.create(session=session, sender="bot", message=bot_message)
+
+#         return JsonResponse({"user_message": user_message, "bot_message": bot_message})
+
+#     return JsonResponse({"error": "Invalid request"}, status=400)
+
 @login_required
 def send_message(request, session_id):
     if request.method == "POST":
         session = get_object_or_404(ChatSession, id=session_id, user=request.user)
         user_message = request.POST["message"]
 
-        # Fetch previous chat history for context (last 10 messages for brevity)
-        previous_messages = ChatMessage.objects.filter(session=session).order_by("timestamp")[:10]
+        # Send message to Grammar Service first
+        grammar_response = requests.post("http://localhost:5001/forward", json={
+            "target_service": "grammar_service",
+            "payload": {"message": user_message}
+        })
 
-        # Build the conversation history
+        print("User Message:", user_message)
+        print("Grammar response status:", grammar_response.status_code)
+        print("Grammar response text:", grammar_response.text)
+
+        if grammar_response.status_code != 200:
+            return JsonResponse({"error": "Failed to process message"}, status=500)
+
+        try:
+            grammar_data = grammar_response.json()  # ✅ Safe JSON decoding
+            fixed_message = grammar_data.get("fixed_message", user_message)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON response from Grammar Service"}, status=500)
+
+        print("Fixed Message destruc:", fixed_message)
+        # Save fixed message
+        ChatMessage.objects.create(session=session, sender="user", message=fixed_message)
+
+        # from here
+
+        previous_messages = ChatMessage.objects.filter(session=session).order_by("timestamp")[:10]
         chat_history = ""
         for msg in previous_messages:
             chat_history += f"{msg.sender}: {msg.message}\n"
 
         # Append the new user message
-        chat_history += f"User: {user_message}\n"
+        chat_history += f"User: {fixed_message}\n"
 
         # Save user message to database
         ChatMessage.objects.create(session=session, sender="user", message=user_message)
+        # Send to LLM (DeepSeek R1)
+        response = requests.post("http://localhost:11434/api/generate", json={
+            "model": "deepseek-r1",
+            "prompt": chat_history,
+            "stream": False
+        })
+
+        if response.status_code != 200:
+            return JsonResponse({"error": f"Ollama API error {response.status_code}: {response.text}"}, status=500)
 
         try:
-            response = requests.post(f"{settings.OLLAMA_API_URL}/api/generate", json={
-                "model": "deepseek-r1",
-                "prompt": chat_history,  # Sending full conversation context
-                "stream": False  # Ensures we get a full response
-            })
+            bot_message = response.json().get("response", "I'm not sure how to respond.")
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON response from LLM"}, status=500)
 
-            # Ensure request was successful
-            if response.status_code != 200:
-                return JsonResponse({"error": f"Ollama API error {response.status_code}: {response.text}"}, status=500)
-
-            # Extract and store the bot's response
-            response_data = response.json()
-            bot_message = response_data.get("response", "I'm not sure how to respond.")
-
-        except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": f"Request failed: {str(e)}"}, status=500)
-
-        # Save bot response to database
         ChatMessage.objects.create(session=session, sender="bot", message=bot_message)
 
-        return JsonResponse({"user_message": user_message, "bot_message": bot_message})
+        return JsonResponse({"user_message": fixed_message, "bot_message": bot_message})
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 

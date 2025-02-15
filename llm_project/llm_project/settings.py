@@ -24,9 +24,9 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
 # Set Ollama API URL based on environment
 if ENVIRONMENT == "production":
-    OLLAMA_API_URL = os.getenv("OLLAMA_API_PROD")
+    OLLAMA_API_URL = os.getenv("http://localhost:11434")
 else:
-    OLLAMA_API_URL = os.getenv("OLLAMA_API_DEV")
+    OLLAMA_API_URL = os.getenv("http://localhost:11434")
 
 print(f"Running in {ENVIRONMENT} mode. Using OLLAMA_API_URL: {OLLAMA_API_URL}")
 
