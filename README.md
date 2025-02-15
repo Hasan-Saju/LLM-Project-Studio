@@ -2,6 +2,44 @@
 
 Welcome to the LLM Project Studio! This is a Django-based project that integrates with Ollama. The project is containerized using Docker for easy deployment.
 
+## 📌 Table of Contents
+
+- [LLM Project Studio](#llm-project-studio)
+  - [📌 Table of Contents](#-table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Running the Project Locally](#running-the-project-locally)
+      - [1️⃣ Clone the Repository](#1️⃣-clone-the-repository)
+      - [2️⃣ Create a Virtual Environment](#2️⃣-create-a-virtual-environment)
+      - [3️⃣ Install Dependencies](#3️⃣-install-dependencies)
+      - [4️⃣ Run Migrations](#4️⃣-run-migrations)
+      - [5️⃣ Start the Django Server](#5️⃣-start-the-django-server)
+  - [Running the Project with Docker](#running-the-project-with-docker)
+      - [1️⃣ Build the Docker Image](#1️⃣-build-the-docker-image)
+      - [2️⃣ Run the Container](#2️⃣-run-the-container)
+  - [Environment Variables](#environment-variables)
+  - [Preview](#preview)
+- [Assignment 2: Service Discovery](#assignment-2-service-discovery)
+  - [Service Registry - Microservices Discovery and Communication](#service-registry---microservices-discovery-and-communication)
+  - [Overview](#overview)
+  - [Features](#features)
+  - [Technologies Used](#technologies-used)
+  - [Running the Service Registry](#running-the-service-registry)
+  - [API Endpoints](#api-endpoints)
+    - [1. Register a Service](#1-register-a-service)
+    - [2. List All Services](#2-list-all-services)
+    - [3. Send Heartbeat](#3-send-heartbeat)
+    - [4. Forward a Message to Another Service](#4-forward-a-message-to-another-service)
+  - [Service Cleanup Process](#service-cleanup-process)
+  - [Communication Between Chatbot and Service Registry](#communication-between-chatbot-and-service-registry)
+    - [**Chatbot Requesting Available Services**](#chatbot-requesting-available-services)
+    - [**Chatbot Forwarding a Message to a Registered Service**](#chatbot-forwarding-a-message-to-a-registered-service)
+  - [Running Other Services](#running-other-services)
+    - [Running the Grammar Service](#running-the-grammar-service)
+    - [Running the Django Chatbot](#running-the-django-chatbot)
+  - [Conclusion](#conclusion)
+
+---
+
 ## Prerequisites
 Before running the project, ensure you have the following installed:
 - **Python 3.8.10**
@@ -9,10 +47,8 @@ Before running the project, ensure you have the following installed:
 - **Docker** (for containerized deployment)
 - **Ollama** (for the AI interaction)
 
-ensure:
+Ensure:
 - **Ollama is running on your machine** (`http://localhost:11434`)
-
-<br>
 
 ## Running the Project Locally
 
@@ -47,9 +83,6 @@ python manage.py runserver
 ```
 - The application will be available at **http://127.0.0.1:8000/**
 
-
-<br>
-
 ## Running the Project with Docker
 
 #### 1️⃣ Build the Docker Image
@@ -63,10 +96,6 @@ docker run -p 8000:8000 my-django-app
 ```
 - The application will be accessible at **http://localhost:8000/**
 
-
-<br>
-
-
 ## Environment Variables
 To configure **Ollama API URL**, create a `.env` file in the `llm_project` directory with:
 ```env
@@ -76,21 +105,15 @@ OLLAMA_API_DEV=http://localhost:11434
 OLLAMA_API_PROD=http://host.docker.internal:11434  
 ```
 
-<br>
-
 ## Preview
 ![alt text](image.png)
-
-
 
 # Assignment 2: Service Discovery
 ![alt text](ServiceRegistry.png)
 
-
 ## Service Registry - Microservices Discovery and Communication
 
 ## Overview
-
 The **Service Registry** is a microservice that allows dynamic discovery, registration, and communication between different microservices in a distributed architecture. It enables microservices to register themselves, send heartbeats to indicate their availability, and communicate with each other.
 
 ## Features
@@ -108,9 +131,7 @@ The **Service Registry** is a microservice that allows dynamic discovery, regist
 - **Threading** (For background monitoring of inactive services)
 
 ## Running the Service Registry
-
 Run the service registry to allow microservices to register:
-
 ```bash
 python service_registrar.py
 ```
@@ -118,9 +139,6 @@ python service_registrar.py
 ## API Endpoints
 
 ### 1. Register a Service
-
-Registers a new microservice with the registry.
-
 - **Endpoint:** `POST /register`
 - **Request Body:**
   ```json
@@ -135,9 +153,6 @@ Registers a new microservice with the registry.
   ```
 
 ### 2. List All Services
-
-Returns a list of active microservices.
-
 - **Endpoint:** `GET /list`
 - **Response:**
   ```json
@@ -147,9 +162,6 @@ Returns a list of active microservices.
   ```
 
 ### 3. Send Heartbeat
-
-Updates the last seen time of a service to prevent deregistration.
-
 - **Endpoint:** `POST /heartbeat`
 - **Request Body:**
   ```json
@@ -161,9 +173,6 @@ Updates the last seen time of a service to prevent deregistration.
   ```
 
 ### 4. Forward a Message to Another Service
-
-Allows one service to send a request to another registered service.
-
 - **Endpoint:** `POST /forward`
 - **Request Body:**
   ```json
@@ -178,20 +187,12 @@ Allows one service to send a request to another registered service.
   ```
 
 ## Service Cleanup Process
-
 - A **background thread** runs every 60 seconds to check for inactive services.
 - If a service does not send a heartbeat for **5 minutes**, it is automatically removed.
 
 ## Communication Between Chatbot and Service Registry
 
-The **Chatbot** interacts with the **Service Registry** to send messages to other microservices like the Grammar Service. The chatbot follows these steps:
-
-1. **Forward Messages:** The chatbot forwards user messages to the appropriate microservice (e.g., Grammar Service) via the service registry.
-2. **Receive Processed Response:** The registry forwards the processed response back to the chatbot.
-3. **Fetch Available Services:** The chatbot also can query the service registry to get the list of available services.
-
 ### **Chatbot Requesting Available Services**
-
 - **Endpoint:** `GET /microservices/list/`
 - **Chatbot Request:**
   ```python
@@ -206,7 +207,6 @@ The **Chatbot** interacts with the **Service Registry** to send messages to othe
   ```
 
 ### **Chatbot Forwarding a Message to a Registered Service**
-
 - **Endpoint:** `POST /microservices/forward/`
 - **Chatbot Request:**
   ```python
@@ -224,18 +224,15 @@ The **Chatbot** interacts with the **Service Registry** to send messages to othe
 ## Running Other Services
 
 ### Running the Grammar Service
-
 ```bash
 python grammar_service.py
 ```
 
 ### Running the Django Chatbot
-
 ```bash
 python manage.py runserver
 ```
 
-
 ## Conclusion
-
 The **Service Registry** ensures seamless communication between microservices by dynamically managing service discovery and request forwarding. This setup makes our chatbot system scalable and resilient.
+
