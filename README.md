@@ -234,5 +234,5 @@ python manage.py runserver
 ```
 
 ## Conclusion
-The **Service Registry** ensures seamless communication between microservices by dynamically managing service discovery and request forwarding. This setup makes our chatbot system scalable and resilient.
+The **Service Registry** ensures seamless communication between microservices by dynamically managing service discovery and request forwarding.
 
