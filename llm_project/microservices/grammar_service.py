@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 import threading
 import time
+import re
 
 app = Flask(__name__)
 
@@ -26,6 +27,31 @@ try:
 except requests.exceptions.RequestException as e:
     print(f"Service registration failed: {e}")
 
+# Define common shorthand and their replacements
+shorthand_corrections = {
+    r"\bu\b": "you",
+    r"\br\b": "are",
+    r"\b4\b": "for",
+    r"\bgr8\b": "great",
+    r"\btho\b": "though",
+    r"\bl8r\b": "later",
+    r"\bpls\b": "please",
+    r"\bthx\b": "thanks"
+}
+
+# Fact-checking dictionary for common misconceptions
+fact_corrections = {
+    r"\bearth is flat\b": "Earth is round",
+    r"\bhumans use only 10% of their brain\b": "Humans use nearly all of their brain.",
+    r"\bwater conducts electricity\b": "Pure water does not conduct electricity, but impurities do.",
+    r"\bbananas grow on trees\b": "Bananas grow on plants, not trees."
+}
+
+# Function to apply corrections
+def correct_text(text, corrections):
+    for pattern, replacement in corrections.items():
+        text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+    return text
 # Start heartbeat thread
 threading.Thread(target=send_heartbeat, daemon=True).start()
 
@@ -40,12 +66,11 @@ def process_prompt():
         user_message = data["message"]
         print("Received message:", user_message)
 
-        # Simple grammar fix (Replace with AI model if needed)
-        fixed_message = user_message.replace("u", "you").replace("r", "are")
+        # Apply shorthand correction
+        fixed_message = correct_text(user_message, shorthand_corrections)
 
-        # Fact-checking logic (simplified)
-        if "earth is flat" in fixed_message.lower():
-            fixed_message = fixed_message.replace("earth is flat", "Earth is round")
+        # Apply fact-checking correction
+        fixed_message = correct_text(fixed_message, fact_corrections)
 
         print("Fixed message:", fixed_message)
         return jsonify({"fixed_message": fixed_message})  # ✅ Always return clean JSON
