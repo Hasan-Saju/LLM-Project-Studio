@@ -104,7 +104,7 @@ The **Service Registry** is a microservice that allows dynamic discovery, regist
 ## Technologies Used
 
 - **Python** (Flask for the Service Registry, Requests for HTTP communication)
-- **Django** (For the chatbot and grammar correction service)
+- **Django** (For the chatbot)
 - **Threading** (For background monitoring of inactive services)
 
 ## Running the Service Registry
@@ -186,9 +186,9 @@ Allows one service to send a request to another registered service.
 
 The **Chatbot** interacts with the **Service Registry** to send messages to other microservices like the Grammar Service. The chatbot follows these steps:
 
-1. **Fetch Available Services:** The chatbot queries the service registry to get the list of available services.
-2. **Forward Messages:** The chatbot forwards user messages to the appropriate microservice (e.g., Grammar Service) via the service registry.
-3. **Receive Processed Response:** The registry forwards the processed response back to the chatbot.
+1. **Forward Messages:** The chatbot forwards user messages to the appropriate microservice (e.g., Grammar Service) via the service registry.
+2. **Receive Processed Response:** The registry forwards the processed response back to the chatbot.
+3. **Fetch Available Services:** The chatbot also can query the service registry to get the list of available services.
 
 ### **Chatbot Requesting Available Services**
 
