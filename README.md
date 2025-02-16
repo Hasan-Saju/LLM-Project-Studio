@@ -1,6 +1,6 @@
 # LLM-Project: Software Studio
 
-Welcome to the LLM Project Studio! This is a Django-based project that integrates with Ollama. The project is containerized using Docker for easy deployment.
+Welcome to the LLM Based Project of Software Studio! This project is a Django-based chatbot that integrates Ollama (to use deepseek-r1 locally). It is containerized using Docker for easy deployment and follows a microservices architecture with a Service Registry for dynamic service discovery and communication.
 
 ## 📌 Table of Contents
 
