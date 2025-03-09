@@ -113,7 +113,7 @@ def send_message(request, session_id):
         user_message = request.POST["message"]
 
         # Send message to Grammar Service first
-        grammar_response = requests.post("http://localhost:5001/forward", json={
+        grammar_response = requests.post("http://10.0.0.233:5001/forward", json={
             "target_service": "grammar_service",
             "payload": {"message": user_message}
         })
