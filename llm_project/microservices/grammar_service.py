@@ -3,14 +3,14 @@ import requests
 import threading
 import time
 import re
+from microservices import config 
 
 app = Flask(__name__)
 
-SERVICE_NAME = "grammar_service"
-SERVICE_ADDRESS = "http://10.0.0.217:5002/process"  # Use its actual IP
-REGISTRAR_URL = "http://10.0.0.233:5001/register"  # IP of the PC running service_registrar.py
-HEART_BEAT_URL = "http://10.0.0.233:5001/heartbeat"
-
+SERVICE_NAME = config.SERVICE_NAME
+SERVICE_ADDRESS = config.SERVICE_ADDRESS
+REGISTRAR_URL = config.REGISTRAR_URL
+HEART_BEAT_URL = config.HEART_BEAT_URL
 
 def send_heartbeat():
     while True:
