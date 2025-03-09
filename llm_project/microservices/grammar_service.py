@@ -9,13 +9,14 @@ app = Flask(__name__)
 SERVICE_NAME = "grammar_service"
 SERVICE_ADDRESS = "http://localhost:5002/process"
 REGISTRAR_URL = "http://localhost:5001/register"
+HEART_BEAT_URL = "http://localhost:5001/heartbeat"
 
-# Function to send heartbeat every 2 minutes
+
 def send_heartbeat():
     while True:
         time.sleep(120)
         try:
-            requests.post("http://localhost:5001/heartbeat", json={"service_name": SERVICE_NAME})
+            requests.post(HEART_BEAT_URL, json={"service_name": SERVICE_NAME})
             print(f"Sent heartbeat for {SERVICE_NAME}")
         except requests.exceptions.RequestException as e:
             print(f"Failed to send heartbeat: {e}")
