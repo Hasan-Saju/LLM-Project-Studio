@@ -7,9 +7,13 @@ import re
 app = Flask(__name__)
 
 SERVICE_NAME = "grammar_service"
-SERVICE_ADDRESS = "http://localhost:5002/process"
-REGISTRAR_URL = "http://localhost:5001/register"
-HEART_BEAT_URL = "http://localhost:5001/heartbeat"
+# SERVICE_ADDRESS = "http://localhost:5002/process"
+# REGISTRAR_URL = "http://localhost:5001/register"
+# HEART_BEAT_URL = "http://localhost:5001/heartbeat"
+
+SERVICE_ADDRESS = "http://10.0.0.217:5002/process"  # Use its actual IP
+REGISTRAR_URL = "http://10.0.0.233:5001/register"  # IP of the PC running service_registrar.py
+HEART_BEAT_URL = "http://10.0.0.233:5001/heartbeat"
 
 
 def send_heartbeat():
@@ -80,5 +84,8 @@ def process_prompt():
         print(f"Error processing message: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
+# if __name__ == "__main__":
+#     app.run(port=5002)
 if __name__ == "__main__":
-    app.run(port=5002)
+    app.run(host="0.0.0.0", port=5002)  # Allows external access
+
