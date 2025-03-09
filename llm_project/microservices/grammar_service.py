@@ -7,8 +7,8 @@ import re
 app = Flask(__name__)
 
 SERVICE_NAME = "grammar_service"
-SERVICE_ADDRESS = "http://10.0.0.217:5002/process"  # Use its actual IP
-REGISTRAR_URL = "http://10.0.0.233:5001/register"  # IP of the PC running service_registrar.py
+SERVICE_ADDRESS = "http://10.0.0.217:5002/process"  
+REGISTRAR_URL = "http://10.0.0.233:5001/register" 
 HEART_BEAT_URL = "http://10.0.0.233:5001/heartbeat"
 
 
@@ -28,7 +28,7 @@ try:
 except requests.exceptions.RequestException as e:
     print(f"Service registration failed: {e}")
 
-# Define common shorthand and their replacements
+
 shorthand_corrections = {
     r"\bu\b": "you",
     r"\br\b": "are",
@@ -40,7 +40,6 @@ shorthand_corrections = {
     r"\bthx\b": "thanks"
 }
 
-# Fact-checking dictionary for common misconceptions
 fact_corrections = {
     r"\bearth is flat\b": "Earth is round",
     r"\bhumans use only 10% of their brain\b": "Humans use nearly all of their brain.",
@@ -74,12 +73,12 @@ def process_prompt():
         fixed_message = correct_text(fixed_message, fact_corrections)
 
         print("Fixed message:", fixed_message)
-        return jsonify({"fixed_message": fixed_message})  # ✅ Always return clean JSON
+        return jsonify({"fixed_message": fixed_message})
 
     except Exception as e:
         print(f"Error processing message: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5002)  # Allows external access
+    app.run(host="0.0.0.0", port=5002) 
 

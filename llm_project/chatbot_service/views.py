@@ -77,7 +77,7 @@ def send_message(request, session_id):
             return JsonResponse({"error": "Failed to process message"}, status=500)
 
         try:
-            grammar_data = grammar_response.json()  # ✅ Safe JSON decoding
+            grammar_data = grammar_response.json()  
             fixed_message = grammar_data.get("fixed_message", user_message)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON response from Grammar Service"}, status=500)
@@ -86,7 +86,6 @@ def send_message(request, session_id):
         # Save fixed message
         ChatMessage.objects.create(session=session, sender="user", message=fixed_message)
 
-        # from here
 
         previous_messages = ChatMessage.objects.filter(session=session).order_by("timestamp")[:10]
         chat_history = ""
