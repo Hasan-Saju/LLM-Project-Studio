@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from config import SERVICE_NAME, SERVICE_ADDRESS, REGISTRAR_URL, HEART_BEAT_URL
 import requests
 import threading
 import time
@@ -6,10 +7,10 @@ import re
 
 app = Flask(__name__)
 
-SERVICE_NAME = "grammar_service"
-SERVICE_ADDRESS = "http://10.0.0.217:5002/process"  
-REGISTRAR_URL = "http://10.0.0.233:5001/register" 
-HEART_BEAT_URL = "http://10.0.0.233:5001/heartbeat"
+# SERVICE_NAME = "grammar_service"
+# SERVICE_ADDRESS = "http://10.0.0.217:5002/process"  
+# REGISTRAR_URL = "http://10.0.0.233:5001/register" 
+# HEART_BEAT_URL = "http://10.0.0.233:5001/heartbeat"
 
 
 def send_heartbeat():

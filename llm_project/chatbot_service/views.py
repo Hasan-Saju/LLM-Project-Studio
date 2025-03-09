@@ -6,6 +6,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import ChatSession, ChatMessage
+from config import GRAMMAR_SERVICE_FORWARD_URL, DEEPSEEK_CHAT_URL
 import requests
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -64,7 +65,7 @@ def send_message(request, session_id):
         user_message = request.POST["message"]
 
         # Send message to Grammar Service first
-        grammar_response = requests.post("http://10.0.0.233:5001/forward", json={
+        grammar_response = requests.post(GRAMMAR_SERVICE_FORWARD_URL, json={
             "target_service": "grammar_service",
             "payload": {"message": user_message}
         })
@@ -98,7 +99,7 @@ def send_message(request, session_id):
         # Save user message to database
         # ChatMessage.objects.create(session=session, sender="user", message=fixed_message)
         # Send to LLM (DeepSeek R1)
-        response = requests.post("http://localhost:11434/api/generate", json={
+        response = requests.post(DEEPSEEK_CHAT_URL, json={
             "model": "deepseek-r1",
             "prompt": chat_history,
             "stream": False

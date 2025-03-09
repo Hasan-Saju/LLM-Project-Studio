@@ -1,0 +1,6 @@
+SERVICE_NAME = "grammar_service"
+SERVICE_ADDRESS = "http://10.0.0.217:5002/process"  
+REGISTRAR_URL = "http://10.0.0.233:5001/register" 
+HEART_BEAT_URL = "http://10.0.0.233:5001/heartbeat"
+GRAMMAR_SERVICE_FORWARD_URL = "http://10.0.0.233:5001/forward"
+DEEPSEEK_CHAT_URL = "http://localhost:11434/api/generate"
