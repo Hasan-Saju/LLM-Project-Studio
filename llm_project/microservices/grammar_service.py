@@ -49,13 +49,11 @@ shorthand_corrections = {
     r"\bwich\b": "which",
     r"\bdplrning\b": "deeplearning",
     r"\bxplain\b": "explain",
-    r"\bw8\b": "what",
+    r"\bwha8\b": "what",
     r"\bes\b": "is",
     r"\bcapitol\b": "capital",
     r"\bbd\b": "Bangladesh",
 }
-
-
 
 fact_corrections = {
     r"\bearth is flat\b": "Earth is round",
