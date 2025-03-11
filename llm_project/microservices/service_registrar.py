@@ -80,6 +80,7 @@ def cleanup_services():
 @app.route("/heartbeat", methods=["POST"])
 def heartbeat():
     """Updates last_seen timestamp for a service."""
+    print("heartbeat")
     data = request.json
     service_name = data.get("service_name")
 

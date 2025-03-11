@@ -38,14 +38,28 @@ shorthand_corrections = {
     r"\btho\b": "though",
     r"\bl8r\b": "later",
     r"\bpls\b": "please",
-    r"\bthx\b": "thanks"
+    r"\bthx\b": "thanks",
+    r"\bdefinately\b": "definitely",
+    r"\brecieve\b": "receive",
+    r"\bseperate\b": "separate",
+    r"\bteh\b": "the",
+    r"\boccured\b": "occurred",
+    r"\bwich\b": "which",
+    r"\bdplrning\b": "deeplearning",
+    r"\bxplain\b": "explain",
 }
+# u r a gr8 LLM. xplain me dplearning.
+
 
 fact_corrections = {
     r"\bearth is flat\b": "Earth is round",
     r"\bhumans use only 10% of their brain\b": "Humans use nearly all of their brain.",
     r"\bwater conducts electricity\b": "Pure water does not conduct electricity, but impurities do.",
-    r"\bbananas grow on trees\b": "Bananas grow on plants, not trees."
+    r"\bbananas grow on trees\b": "Bananas grow on plants, not trees.",
+    r"\bmount everest is the tallest mountain\b": "Mauna Kea is the tallest mountain when measured from base to peak.",
+    r"\bthe great wall of china is visible from space\b": "The Great Wall of China is not visible from space with the naked eye.",
+    r"\bwe have five senses\b": "Humans have more than five senses, including balance and temperature perception.",
+    r"\bgoldfish have a three-second memory\b": "Goldfish have a memory span of months, not seconds.",
 }
 
 # Function to apply corrections
