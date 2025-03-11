@@ -8,9 +8,9 @@
 
 # university network
 SERVICE_NAME = "grammar_service"
-SERVICE_ADDRESS = "http://10.160.14.85:5002/process"  #grammar service
-REGISTRAR_URL = "http://10.150.4.235:5001/register"   #host
-HEART_BEAT_URL = "http://10.150.4.235:5001/heartbeat"
-SERVICE_DISCOVER_GRAMMAR = "http://10.150.4.235:5001/forward"
+SERVICE_ADDRESS = "http://10.160.15.79:5002/process"  #grammar service
+REGISTRAR_URL = "http://10.150.7.95:5001/register"   #host
+HEART_BEAT_URL = "http://10.150.7.95:5001/heartbeat"
+SERVICE_DISCOVER_GRAMMAR = "http://10.150.7.95:5001/forward"
 DEEPSEEK_CHAT_URL = "http://localhost:11434/api/generate"
 

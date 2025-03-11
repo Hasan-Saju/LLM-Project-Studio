@@ -49,6 +49,10 @@ shorthand_corrections = {
     r"\bwich\b": "which",
     r"\bdplrning\b": "deeplearning",
     r"\bxplain\b": "explain",
+    r"\bw8\b": "what",
+    r"\bes\b": "is",
+    r"\bcapitol\b": "capital",
+    r"\bbd\b": "Bangladesh",
 }
 
 
