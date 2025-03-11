@@ -97,9 +97,7 @@ def send_message(request, session_id):
         # Append the new user message
         chat_history += f"User: {fixed_message}\n"
 
-        # Save user message to database
-        # ChatMessage.objects.create(session=session, sender="user", message=fixed_message)
-        # Send to LLM (DeepSeek R1)
+
         response = requests.post(DEEPSEEK_CHAT_URL, json={
             "model": "deepseek-r1",
             "prompt": chat_history,
