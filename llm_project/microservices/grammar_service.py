@@ -1,17 +1,19 @@
 from flask import Flask, request, jsonify
-from config import SERVICE_NAME, SERVICE_ADDRESS, REGISTRAR_URL, HEART_BEAT_URL
+# from config import SERVICE_NAME, SERVICE_ADDRESS, REGISTRAR_URL, HEART_BEAT_URL
+from dotenv import load_dotenv
 import requests
 import threading
 import time
 import re
+import os
+
+load_dotenv()
+SERVICE_NAME = os.getenv("SERVICE_NAME")
+SERVICE_ADDRESS = os.getenv("SERVICE_ADDRESS")
+REGISTRAR_URL = os.getenv("REGISTRAR_URL")
+HEART_BEAT_URL = os.getenv("HEART_BEAT_URL")
 
 app = Flask(__name__)
-
-# SERVICE_NAME = "grammar_service"
-# SERVICE_ADDRESS = "http://10.0.0.217:5002/process"  
-# REGISTRAR_URL = "http://10.0.0.233:5001/register" 
-# HEART_BEAT_URL = "http://10.0.0.233:5001/heartbeat"
-
 
 def send_heartbeat():
     while True:
@@ -48,7 +50,7 @@ shorthand_corrections = {
     r"\bdplrning\b": "deeplearning",
     r"\bxplain\b": "explain",
 }
-# u r a gr8 LLM. xplain me dplearning.
+
 
 
 fact_corrections = {

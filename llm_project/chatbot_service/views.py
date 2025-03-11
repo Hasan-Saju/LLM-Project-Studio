@@ -6,10 +6,11 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import ChatSession, ChatMessage
-from config import GRAMMAR_SERVICE_FORWARD_URL, DEEPSEEK_CHAT_URL
+from config import SERVICE_DISCOVER_GRAMMAR, DEEPSEEK_CHAT_URL
 import requests
 from django.views.decorators.csrf import csrf_exempt
 import json
+import re
 
 def user_login(request):
     if request.method == "POST":
@@ -65,7 +66,7 @@ def send_message(request, session_id):
         user_message = request.POST["message"]
 
         # Send message to Grammar Service first
-        grammar_response = requests.post(GRAMMAR_SERVICE_FORWARD_URL, json={
+        grammar_response = requests.post(SERVICE_DISCOVER_GRAMMAR, json={
             "target_service": "grammar_service",
             "payload": {"message": user_message}
         })
@@ -110,6 +111,7 @@ def send_message(request, session_id):
 
         try:
             bot_message = response.json().get("response", "I'm not sure how to respond.")
+            bot_message = process_response_message(bot_message)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON response from LLM"}, status=500)
 
@@ -125,3 +127,7 @@ def chat_history(request, session_id):
     session = get_object_or_404(ChatSession, id=session_id, user=request.user)
     messages = ChatMessage.objects.filter(session=session)
     return JsonResponse({"messages": list(messages.values())})
+
+def process_response_message(text):
+    cleaned_text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+    return cleaned_text.strip()
